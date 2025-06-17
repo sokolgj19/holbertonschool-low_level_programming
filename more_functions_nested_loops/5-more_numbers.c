@@ -1,11 +1,7 @@
 #include "main.h"
 
 /**
- * more_numbers - Prints 10 times the numbers from 0 to 14
- *
- * Description: Uses _putchar to print numbers from 0 to 14
- *              ten times, followed by a new line each time.
- *              Only uses _putchar three times in the code.
+ * more_numbers - prints 10 times the numbers from 0 to 14
  *
  * Return: void
  */
@@ -13,7 +9,8 @@ void more_numbers(void)
 {
     int i, j;
 
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < 10; i++) 
+	{
         for (j = 0; j <= 14; j++) {
             if (j >= 10)
                 _putchar('1');
