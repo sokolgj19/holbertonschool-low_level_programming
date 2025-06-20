@@ -20,13 +20,15 @@ int _atoi(char *s)
 		else if (s[i] >= '0' && s[i] <= '9')
 		{
 			started = 1;
-			/* Build number as negative to avoid overflow */
-			result = result * 10 - (s[i] - '0');
+			result = result * 10 - (s[i] - '0'); /* build negative */
 		}
 		else if (started)
 			break;
 		i++;
 	}
 
-	return (sign * -result);
+	if (sign == -1)
+		return (result);       /* already negative */
+	else
+		return (-result);      /* make positive safely */
 }
