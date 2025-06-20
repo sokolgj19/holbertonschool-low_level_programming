@@ -1,12 +1,8 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
  * puts2 - Prints every other character of a string
- * @str: Pointer to the string to be printed
- *
- * Description: Starts with the first character,
- * then prints every second character followed by a new line.
+ * @str: Pointer to the string
  */
 void puts2(char *str)
 {
@@ -15,7 +11,9 @@ void puts2(char *str)
 	while (str[i] != '\0')
 	{
 		_putchar(str[i]);
-		i += 2;
+		i++;
+		if (str[i] == '\0')
+			break;
+		i++;
 	}
-	_putchar('\n');
 }
