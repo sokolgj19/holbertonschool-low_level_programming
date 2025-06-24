@@ -1,3 +1,4 @@
+julien@ubuntu:~/$ cat 3-main.c
 #include "main.h"
 #include <stdio.h>
 
@@ -8,11 +9,15 @@
  */
 int main(void)
 {
-    char s1[] = "Hello";
-    char s2[] = "World!";
+    char *s = "hello, world";
+    char *f = "oleh";
+    unsigned int n;
 
-    printf("%d\n", _strcmp(s1, s2));
-    printf("%d\n", _strcmp(s2, s1));
-    printf("%d\n", _strcmp(s1, s1));
+    n = _strspn(s, f);
+    printf("%u\n", n);
     return (0);
 }
+julien@ubuntu:~/$ gcc -Wall -pedantic -Werror -Wextra -std=gnu89 3-main.c 3-strspn.c -o 3-strspn
+julien@ubuntu:~/$ ./3-strspn 
+5
+julien@ubuntu:~/$
