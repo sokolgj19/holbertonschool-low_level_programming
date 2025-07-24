@@ -1,10 +1,10 @@
 #include "main.h"
 
 /**
- * print_error - Prints error and exits
- * @exit_code: exit status
+ * print_error - Print error message and exit
+ * @exit_code: code to exit with
  * @msg: message to print
- * @arg: related filename or descriptor
+ * @arg: file name or descriptor to include
  */
 void print_error(int exit_code, const char *msg, const char *arg)
 {
@@ -13,11 +13,10 @@ void print_error(int exit_code, const char *msg, const char *arg)
 }
 
 /**
- * main - Copies file content from one file to another
+ * main - Copy content of a file to another file
  * @argc: argument count
  * @argv: argument vector
- *
- * Return: 0 on success, exits 97‑100 on error
+ * Return: 0 on success, exits with error code otherwise
  */
 int main(int argc, char *argv[])
 {
@@ -36,19 +35,26 @@ int main(int argc, char *argv[])
 
 	to_fd = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (to_fd == -1)
-		print_error(99, "Error: Can't write to", argv[2]);
-
-	while (1)
 	{
-		rd = read(from_fd, buf, 1024);
-		if (rd == -1)
-			print_error(98, "Error: Can't read from file", argv[1]);
-		if (rd == 0)
-			break;
+		close(from_fd);
+		print_error(99, "Error: Can't write to", argv[2]);
+	}
 
+	while ((rd = read(from_fd, buf, 1024)) > 0)
+	{
 		wr = write(to_fd, buf, rd);
-		if (wr == -1 || wr != rd)
+		if (wr != rd)
+		{
+			close(from_fd);
+			close(to_fd);
 			print_error(99, "Error: Can't write to", argv[2]);
+		}
+	}
+	if (rd == -1)
+	{
+		close(from_fd);
+		close(to_fd);
+		print_error(98, "Error: Can't read from file", argv[1]);
 	}
 
 	if (close(from_fd) == -1)
@@ -56,6 +62,7 @@ int main(int argc, char *argv[])
 		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", from_fd);
 		exit(100);
 	}
+
 	if (close(to_fd) == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", to_fd);
