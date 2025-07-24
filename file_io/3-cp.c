@@ -1,10 +1,10 @@
 #include "main.h"
 
 /**
- * print_error - Prints formatted error and exits with a code
- * @exit_code: exit status
+ * print_error - Prints error message and exits
+ * @exit_code: code to exit with
  * @msg: error message
- * @arg: name of file or fd causing the error
+ * @arg: filename or fd
  */
 void print_error(int exit_code, const char *msg, const char *arg)
 {
@@ -13,11 +13,11 @@ void print_error(int exit_code, const char *msg, const char *arg)
 }
 
 /**
- * main - Copies the content of a file to another file
- * @argc: argument count
+ * main - Copies content of a file to another
+ * @argc: number of arguments
  * @argv: argument vector
  *
- * Return: 0 on success, exits with codes 97-100 on error
+ * Return: 0 on success, exit codes on error
  */
 int main(int argc, char *argv[])
 {
@@ -38,14 +38,15 @@ int main(int argc, char *argv[])
 	if (to_fd == -1)
 		print_error(99, "Error: Can't write to", argv[2]);
 
-	while ((rd = read(from_fd, buffer, 1024)) > 0)
+	while ((rd = read(from_fd, buffer, 1024)) != 0)
 	{
+		if (rd == -1)
+			print_error(98, "Error: Can't read from file", argv[1]);
+
 		wr = write(to_fd, buffer, rd);
-		if (wr != rd)
+		if (wr == -1 || wr != rd)
 			print_error(99, "Error: Can't write to", argv[2]);
 	}
-	if (rd == -1)
-		print_error(98, "Error: Can't read from file", argv[1]);
 
 	if (close(from_fd) == -1)
 	{
@@ -57,5 +58,6 @@ int main(int argc, char *argv[])
 		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", to_fd);
 		exit(100);
 	}
+
 	return (0);
 }
